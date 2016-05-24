@@ -114,6 +114,17 @@ users:
     purge: True
     force: True
 
+  ## custom global bashrc
+  lookup:
+    bashrc_template: salt://my_local_templates/files/bashrc/custom_bashrc.jinja2
+    bashrc_template_format: jinja
+
+  ## custom per-user bashrc
+  duser:
+    fullname: D User
+    manage_bashrc: True
+    bashrc_template: salt://my_local_templates/files/bashrc/bashrc_duser.jinja2
+    bashrc_template_format: jinja
 
 ## Old syntax of absent_users still supported
 absent_users:

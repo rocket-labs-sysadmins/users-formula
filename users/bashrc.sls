@@ -13,6 +13,9 @@ include:
 {%- else -%}
 {%- set user_group = name -%}
 {%- endif %}
+{# user bashrc can be set globally via users:lookup keys. Per-user values override defaults. #}
+{%- set bashrc_template = user.get('bashrc_template', users.bashrc_template|default(False)) %}
+{%- set bashrc_template_format = user.get('bashrc_template_format', users.bashrc_template_format|default('None')) %}
 {%- if manage -%}
 users_{{ name }}_user_bashrc:
   file.managed:
@@ -20,8 +23,9 @@ users_{{ name }}_user_bashrc:
     - user: {{ name }}
     - group: {{ user_group }}
     - mode: 644
-    - source: 
-      - salt://users/files/bashrc/{{ name }}/bashrc
+    - source:
+      - bashrc_template|default('salt://users/files/bashrc/' ~ name ~ '/bashrc')
       - salt://users/files/bashrc/bashrc
+    - template: {{ bashrc_template_format }}
 {% endif %}
 {% endfor %}

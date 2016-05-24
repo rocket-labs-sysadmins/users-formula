@@ -33,6 +33,8 @@ is configured.
 
 Ensures the bashrc file exists in the users home directory. Set manage_bashrc:
 True in pillar per user. Defaults to False
+Variables bashrc_template and bashrc_template_format can be used to define bashrc
+contents per user or globally via lookup dict (see <pillar.example>).
 
 ``users.profile``
 ----------------
