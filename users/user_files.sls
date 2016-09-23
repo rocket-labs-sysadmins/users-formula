@@ -5,9 +5,10 @@ include:
 
 {% set userfile_dirs = salt['cp.list_master_dirs'](prefix='users/files/user/') -%}
 {%- for username, user in salt['pillar.get']('users', {}).items() if (user.absent is not defined or not user.absent) -%}
+{%- set current = salt.user.info(username) -%}
 {%- set user_files = salt['pillar.get'](('users:' ~ username ~ ':user_files'), {'enabled': False}) -%}
 {%- set user_group = salt['pillar.get'](('users:' ~ username ~ ':prime_group:name'), username) -%}
-{%- set home = user.get('home', "/home/%s" % username) -%}
+{%- set user_home = salt['pillar.get'](('users:' ~ username ~ ':home'), current.get('home', '/home/' ~ username )) -%}
 {%- if user_files.enabled -%}
 
 {%- if user_files.source is defined -%}
@@ -29,7 +30,7 @@ include:
 {%- if not skip_user %}
 users_userfiles_{{ username }}_recursive:
   file.recurse:
-    - name: {{ home }}
+    - name: {{ user_home }}
     - source: {{ file_source }}
     - user: {{ username }}
     - group: {{ user_group }}
